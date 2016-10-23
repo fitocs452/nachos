@@ -53,6 +53,7 @@ public class Communicator {
         is_bussy = true;
         transfer = word;
 
+        System.out.println("word speak " + word);
         listeners_sleep.wake();
         actual_sp.sleep();
 
@@ -75,6 +76,7 @@ public class Communicator {
         int t_word = transfer;
         is_bussy = false;
 
+        System.out.println("word listen" + t_word);
         actual_sp.wake();
         speakers_sleep.wake();
         com_lock.release();

@@ -282,7 +282,7 @@ public class KThread {
 
         Lib.assertTrue(this != currentThread);
 
-        if (currentThread.status == statusFinished) {
+        if (status == statusFinished) {
             return;
         } else {
             Machine.interrupt().disable();
@@ -444,7 +444,7 @@ public class KThread {
      * Tests whether this module is working.
      */
     public static void selfTest() {
-     // Lib.debug(dbgThread, "Enter KThread.selfTest");
+     Lib.debug(dbgThread, "Enter KThread.selfTest");
      // cero = new KThread(new PingTest(0)).setName("forked thread0");
      // cero.fork();
      // uno = new KThread(new PingTest(1)).setName("forked thread1");
@@ -458,6 +458,8 @@ public class KThread {
      cero.fork();
      uno = new KThread(new ListenerRunnable(c));
      uno.fork();
+     cero.join();
+     uno.join();
     }
 
     private static final char dbgThread = 't';
