@@ -20,7 +20,7 @@ public class Condition2 {
      * Allocate a new condition variable.
      *
      * @param	conditionLock	the lock associated with this condition
-     *				variable. The current thread must hold this
+     *				variable. The current thrkead must hold this
      *				lock whenever it uses <tt>sleep()</tt>,
      *				<tt>wake()</tt>, or <tt>wakeAll()</tt>.
      */
