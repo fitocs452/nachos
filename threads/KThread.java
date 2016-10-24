@@ -453,13 +453,17 @@ public class KThread {
      // dos.fork();
      // tres = new KThread(new PingTest(3)).setName("forked thread3");
      // tres.fork();
-     Communicator c = new Communicator();
-     cero = new KThread(new SpeakerRunnable(c));
-     cero.fork();
-     uno = new KThread(new ListenerRunnable(c));
-     uno.fork();
-     cero.join();
-     uno.join();
+
+     // Communicator c = new Communicator();
+     // cero = new KThread(new SpeakerRunnable(c));
+     // cero.fork();
+     // uno = new KThread(new ListenerRunnable(c));
+     // uno.fork();
+     // cero.join();
+     // uno.join();
+
+        Boat b = new Boat();
+        b.selfTest();
     }
 
     private static final char dbgThread = 't';
