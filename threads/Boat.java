@@ -145,11 +145,16 @@ public class Boat
                 return;
             }
 
+            // Cuando el bote esta en Oahu
             if(boatOnOahu) {
+                // Si no hay asientos disponibles nos dormimos 
                 if(!(boatSeatsAvailable > 1)) {
                     Oahu.getIsla().sleep();
+                // Si hay espacio pero hay como minimo 2 ninos
+                // nos dormimos tambien
                 } else if (Oahu.getChild() >=2 ) {
                     Oahu.getIsla().sleep();
+                // Si es un adulto si nos movemos
                 } else {
                     // Cambiamos de isla
                     isOahu = false;
@@ -162,6 +167,7 @@ public class Boat
                     // Cambiamos el estado de la isla
                     Molokai.incrementAdult();
                     Molokai.setPeople(Oahu.getPopulation());
+                    // Cambiamos el estado del bote
                     boatSeatsAvailable = 2; 
                     boatOnOahu = false;
                     Molokai.getIsla().wakeAll();
@@ -179,68 +185,78 @@ public class Boat
         lock.acquire();
 
         while(true){
-            if (isOahu) {
-                if(boatOnOahu) {
-                    if(Oahu.getChild() < 2) {
-                        Oahu.getIsla().sleep();
-                    }
-
-                    if(boatSeatsAvailable > 1) {
-                        isOahu = false;
-                        Oahu.decrementChild();
-                        boatSeatsAvailable = 1;
-                        bg.ChildRowToMolokai();
-                        
-                        if(Oahu.getChild() > 0) {
-                            Oahu.incrementChild();
-                            Oahu.getIsla().wakeAll();
-                        } else {
-                            boatOnOahu = false;
-                            boatSeatsAvailable = 2;
-                            Molokai.incrementChild();
-                            Molokai.setPeople(Oahu.getPopulation());
-                            Molokai.getIsla().wakeAll();
-                        }
-
-                        Molokai.getIsla().sleep();
-                    } else if(boatSeatsAvailable == 1) {
-                        boatSeatsAvailable = 0;
-                        Oahu.decrementChild();
-                        Oahu.decrementChild();
-                        bg.ChildRideToMolokai();
-                        Molokai.incrementChild();
-                        Molokai.incrementChild();
-                        Molokai.setPeople(Oahu.getPopulation());
-                        boatSeatsAvailable = 2;
-                        isOahu = false;
-                        boatOnOahu = false;
-                        Molokai.getIsla().wakeAll();
-                        Molokai.getIsla().sleep();
-                    } else {
-                        Oahu.getIsla().sleep();
-                    }
-                } else {
-                    Oahu.getIsla().sleep(); 
-                }
-            } else {
+            // Caso en el que estamos en Molokai
+            if (!isOahu) {
+                // Si no hay personas para pasar nos dormimos
                 if(Molokai.getPeople() == 0) {
                     Molokai.getIsla().sleep();
                 } else {
+                    // Solo pasamos a los ninos de Molokai a Oahu
                     if(!boatOnOahu) {
                         isOahu = true;
+                        // Cambiamos estado de la Isla de Molokai
                         Molokai.decrementChild();
                         boatSeatsAvailable = 1;
+                        // Pasamos el nino a Oahu
                         bg.ChildRowToOahu();
+
+                        // Cambiamos el estado de la isla de Oahu
                         Oahu.incrementChild();
                         Oahu.setPeople(Molokai.getPopulation());
                         boatSeatsAvailable = 2;
                         boatOnOahu = true;
+
+                        // Notificamos a los integrantes de la isla
                         Oahu.getIsla().wakeAll();
-                        Oahu.getIsla().sleep();
+                        // Oahu.getIsla().sleep();
                     } else {
                         Molokai.getIsla().sleep();
                     }
                 }
+                continue;
+            }
+
+            if(boatOnOahu) {
+                if(Oahu.getChild() < 2) {
+                    Oahu.getIsla().sleep();
+                }
+
+                if(boatSeatsAvailable > 1) {
+                    isOahu = false;
+                    Oahu.decrementChild();
+                    boatSeatsAvailable = 1;
+                    bg.ChildRowToMolokai();
+                    
+                    if(Oahu.getChild() > 0) {
+                        Oahu.incrementChild();
+                        Oahu.getIsla().wakeAll();
+                    } else {
+                        boatOnOahu = false;
+                        boatSeatsAvailable = 2;
+                        Molokai.incrementChild();
+                        Molokai.setPeople(Oahu.getPopulation());
+                        Molokai.getIsla().wakeAll();
+                    }
+
+                    Molokai.getIsla().sleep();
+                } else if(boatSeatsAvailable == 1) {
+                    boatSeatsAvailable = 0;
+                    Oahu.decrementChild();
+                    Oahu.decrementChild();
+                    bg.ChildRideToMolokai();
+                    Molokai.incrementChild();
+                    Molokai.incrementChild();
+                    Molokai.setPeople(Oahu.getPopulation());
+                    boatSeatsAvailable = 2;
+                    isOahu = false;
+                    boatOnOahu = false;
+                    Molokai.getIsla().wakeAll();
+                    Molokai.getIsla().sleep();
+                } else {
+                    Oahu.getIsla().sleep();
+                }
+            } else {
+                Oahu.getIsla().sleep(); 
             }
         }
     }
