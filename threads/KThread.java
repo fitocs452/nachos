@@ -462,8 +462,8 @@ public class KThread {
      // cero.join();
      // uno.join();
 
-        Boat b = new Boat();
-        b.selfTest();
+        Boat boatProblem = new Boat();
+        boatProblem.selfTest();
     }
 
     private static final char dbgThread = 't';
